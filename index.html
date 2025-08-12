@@ -3,34 +3,28 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Simulation d’évolution – Damier & multiples cellules</title>
+<title>Simulation d’évolution – équilibrée</title>
 <style>
-  :root {
-    --bg: #0f1220; --panel: #161a2b; --text: #e8ecff; --muted: #a6add9;
-    --accent: #7aa2ff; --accent2: #6ee7b7; --gridA: #1b2239; --gridB: #12172a;
-    --plant: #39d353; --herb:  #ffe66d; --carn:  #ff6b6b; --wall:  #7c859e;
-  }
-  html, body { height: 100%; background: radial-gradient(1200px 800px at 70% -10%, #1b2350 0%, #0f1220 40%, #0b0d18 100%); margin: 0; color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Ubuntu, Cantarell, Arial, "Noto Sans"); }
-  .wrap { display: grid; grid-template-columns: 1fr 360px; gap: 16px; height: 100vh; padding: 16px; box-sizing: border-box; }
-  @media (max-width: 980px) { .wrap { grid-template-columns: 1fr; grid-auto-rows: min-content; height: auto; } }
-  #canvas { width: 100%; height: 100%; background: #0b0e1a; border-radius: 10px; box-shadow: 0 12px 40px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.06); touch-action: none; }
-  .panel { background: rgba(20,25,45,.7); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.06); border-radius: 12px; padding: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.25); }
-  h1 { font-size: 18px; margin: 0 0 8px; font-weight: 700; letter-spacing:.2px }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0; }
-  .row3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0; }
-  button, select, input[type="number"], input[type="range"] {
-    background: #0f1327; color: var(--text); border: 1px solid rgba(255,255,255,.1);
-    padding: 10px 12px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%;
-  }
-  button:hover { border-color: rgba(255,255,255,.22); }
-  .badges { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 4px; }
-  .badge { display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; font-weight:700; border:1px solid rgba(255,255,255,.08); background:#0f1327; white-space:nowrap; }
-  .dot { width:14px; height:14px; border-radius:3px; display:inline-block; }
-  .plant{ background:var(--plant); } .herb{ background:var(--herb); } .carn{ background:var(--carn); } .wall{ background:var(--wall); } .empty{ background:linear-gradient(135deg,var(--gridA),var(--gridB)); }
-  label { font-size: 12px; color: var(--muted); display:block; margin: 6px 0 6px; }
-  .small { font-size: 12px; color: var(--muted); }
-  .footer { opacity:.7; font-size:12px; margin-top:8px }
-  .sep { height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent); margin:12px 0; }
+  :root { --bg:#0f1220; --panel:#161a2b; --text:#e8ecff; --muted:#a6add9;
+    --gridA:#1b2239; --gridB:#12172a; --plant:#39d353; --herb:#ffe66d; --carn:#ff6b6b; --wall:#7c859e; }
+  html,body{height:100%;margin:0;color:var(--text);background:#0b0e1a;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+  .wrap{display:grid;grid-template-columns:1fr 340px;gap:14px;height:100vh;padding:14px;box-sizing:border-box}
+  @media (max-width:980px){.wrap{grid-template-columns:1fr;grid-auto-rows:min-content;height:auto}}
+  #canvas{width:100%;height:100%;background:#0b0e1a;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.06);touch-action:none}
+  .panel{background:rgba(20,25,45,.7);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px}
+  h1{font-size:18px;margin:0 0 8px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+  .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+  button,select,input[type="number"],input[type="range"]{background:#0f1327;color:var(--text);border:1px solid rgba(255,255,255,.1);padding:8px 10px;border-radius:10px;font-weight:600;cursor:pointer;width:100%}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:#0f1327;font-weight:700}
+  .dot{width:14px;height:14px;border-radius:3px;display:inline-block}
+  .plant{background:var(--plant)} .herb{background:var(--herb)} .carn{background:var(--carn)} .wall{background:var(--wall)} .empty{background:linear-gradient(135deg,var(--gridA),var(--gridB))}
+  label{font-size:12px;color:var(--muted);display:block;margin:6px 0}
+  .small{font-size:12px;color:var(--muted)}
+  .sep{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);margin:10px 0}
+  .stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .pill{font-size:12px;border:1px solid rgba(255,255,255,.12);padding:4px 8px;border-radius:999px;background:#0f1327}
 </style>
 </head>
 <body>
@@ -56,9 +50,9 @@
         <option value="3">Carnivore</option>
       </select>
       <select id="paintMode">
-        <option value="single">Peindre au clic</option>
-        <option value="drag" selected>Peindre en glissant</option>
-        <option value="rect">Rectangles</option>
+        <option value="drag" selected>Glisser</option>
+        <option value="single">Clic</option>
+        <option value="rect">Rectangle</option>
       </select>
     </div>
 
@@ -66,7 +60,7 @@
     <div class="row3">
       <button id="toggle">▶︎ Lancer</button>
       <button id="step">⏭️ Step</button>
-      <button id="reset">♻️ Réinitialiser</button>
+      <button id="reset">♻️ Reset</button>
     </div>
     <div class="row3">
       <button id="randomPlants">🌱 Seed plantes</button>
@@ -78,10 +72,11 @@
 
     <label>Vitesse (ms/tour)</label>
     <input type="range" id="speed" min="10" max="400" value="90" />
-    <label>Taille de la grille (côtés)</label>
+
+    <label>Taille de la grille</label>
     <div class="row">
-      <input type="number" id="cols" min="10" max="200" step="1" value="80" />
-      <input type="number" id="rows" min="10" max="200" step="1" value="50" />
+      <input type="number" id="cols" min="10" max="200" step="1" value="70" />
+      <input type="number" id="rows" min="10" max="200" step="1" value="45" />
     </div>
     <button id="applySize">📐 Appliquer la taille</button>
 
@@ -89,342 +84,286 @@
 
     <label>Plantes</label>
     <div class="row">
-      <input type="number" id="plantSpread" value="0.020" step="0.005" />
-      <input type="number" id="plantDecay"  value="0.002" step="0.001" />
+      <input type="number" id="plantSpread" value="0.030" step="0.005" />
+      <input type="number" id="plantDecay"  value="0.003" step="0.001" />
     </div>
-    <div class="small">Proba pousse par case vide voisine / proba de flétrir par tour.</div>
+    <div class="small">Proba pousse / Proba de flétrir par tour.</div>
 
     <label>Herbivores</label>
     <div class="row">
-      <input type="number" id="herbEat" value="6" step="1" />
-      <input type="number" id="herbMoveCost" value="1" step="1" />
+      <input type="number" id="herbEat" value="8" step="1" />
+      <input type="number" id="herbMetab" value="1" step="1" />
     </div>
     <div class="row">
-      <input type="number" id="herbStart" value="8" step="1" />
-      <span class="small" style="display:flex;align-items:center;justify-content:center;">Énergie de départ</span>
+      <input type="number" id="herbMoveCost" value="0" step="1" />
+      <input type="number" id="herbStart" value="16" step="1" />
     </div>
+    <div class="small">Gain quand mange / Métabolisme (coût/tour) / Coût extra si déplacement / Énergie de départ.</div>
 
     <label>Carnivores</label>
     <div class="row">
-      <input type="number" id="carnEat" value="12" step="1" />
-      <input type="number" id="carnMoveCost" value="2" step="1" />
+      <input type="number" id="carnEat" value="16" step="1" />
+      <input type="number" id="carnMetab" value="1" step="1" />
     </div>
     <div class="row">
-      <input type="number" id="carnStart" value="10" step="1" />
-      <span class="small" style="display:flex;align-items:center;justify-content:center;">Énergie de départ</span>
+      <input type="number" id="carnMoveCost" value="1" step="1" />
+      <input type="number" id="carnStart" value="18" step="1" />
     </div>
 
     <div class="row">
-      <input type="number" id="reproEnergy" value="14" step="1" />
-      <input type="number" id="maxAge" value="500" step="10" />
+      <input type="number" id="reproEnergy" value="24" step="1" />
+      <input type="number" id="maxAge" value="1200" step="10" />
     </div>
-    <div class="small">Reproduction si énergie ≥ seuil / Âge max (tours).</div>
 
     <div class="sep"></div>
     <div class="row">
-      <button id="export">💾 Exporter état</button>
-      <button id="import">📥 Importer état</button>
+      <button id="export">💾 Exporter</button>
+      <button id="import">📥 Importer</button>
     </div>
-    <textarea id="io" rows="4" style="width:100%;margin-top:8px;background:#0f1327;color:var(--text);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px;" placeholder="État en JSON…"></textarea>
+    <textarea id="io" rows="3" style="width:100%;margin-top:8px;background:#0f1327;color:var(--text);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px" placeholder="État JSON…"></textarea>
 
-    <div class="footer">
-      Astuces : seed des <b>plantes</b>, ajoute quelques <b>herbivores</b> puis 1‑2 <b>carnivores</b>. Les bords bouclent (torus).
+    <div class="stats">
+      <span class="pill" id="pPlants">🌱 0</span>
+      <span class="pill" id="pHerb">🐭 0</span>
+      <span class="pill" id="pCarn">🦊 0</span>
+      <span class="pill" id="pTick">⏱️ 0</span>
+    </div>
+
+    <div class="small" style="margin-top:6px">
+      Astuce: commence par 🌱 puis 15‑25 🐭 et 2‑5 🦊. Les bords bouclent (torus).
     </div>
   </div>
 </div>
 
 <script>
-const T = { EMPTY:0, PLANT:1, HERB:2, CARN:3, WALL:4 };
-const colors = { 0:null, 1:getCss('--plant'), 2:getCss('--herb'), 3:getCss('--carn'), 4:getCss('--wall') };
-function getCss(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+const T={EMPTY:0,PLANT:1,HERB:2,CARN:3,WALL:4};
+const colors={0:null,1:getCss('--plant'),2:getCss('--herb'),3:getCss('--carn'),4:getCss('--wall')};
+function getCss(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d', { alpha:false });
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d',{alpha:false});
+let COLS=+document.getElementById('cols').value;
+let ROWS=+document.getElementById('rows').value;
 
-let COLS = +document.getElementById('cols').value;
-let ROWS = +document.getElementById('rows').value;
+let grid,energy,age,tick=0;
 
-let grid, energy, age;
-
-function make2D(cols, rows, fill=0){
-  const a = new Array(rows);
-  for(let y=0;y<rows;y++) a[y] = new Array(cols).fill(fill);
-  return a;
-}
+function make2D(c,r,fill=0){const a=new Array(r);for(let y=0;y<r;y++)a[y]=new Array(c).fill(fill);return a;}
 function resizeCanvas(){
-  const left = document.querySelector('.wrap').getBoundingClientRect();
-  const panel = document.querySelector('.panel').getBoundingClientRect();
-  const isNarrow = window.innerWidth <= 980;
-  const w = isNarrow ? left.width - 32 : left.width - panel.width - 24;
-  const h = isNarrow ? window.innerHeight - panel.height - 48 : left.height - 32;
-  canvas.width = Math.max(200, Math.floor(w));
-  canvas.height = Math.max(240, Math.floor(h));
+  const left=document.querySelector('.wrap').getBoundingClientRect();
+  const panel=document.querySelector('.panel').getBoundingClientRect();
+  const narrow=window.innerWidth<=980;
+  const w=narrow?left.width-32:left.width-panel.width-24;
+  const h=narrow?window.innerHeight-panel.height-48:left.height-28;
+  canvas.width=Math.max(200,Math.floor(w));
+  canvas.height=Math.max(240,Math.floor(h));
 }
-window.addEventListener('resize', ()=>{ resizeCanvas(); draw(); });
+window.addEventListener('resize',()=>{resizeCanvas();draw();});
 
-function init(){
-  grid = make2D(COLS, ROWS, T.EMPTY);
-  energy = make2D(COLS, ROWS, 0);
-  age = make2D(COLS, ROWS, 0);
-}
+function init(){ grid=make2D(COLS,ROWS,T.EMPTY); energy=make2D(COLS,ROWS,0); age=make2D(COLS,ROWS,0); tick=0; updateStats(); }
 
-function wrap(x, max){ return (x + max) % max; }
-const NBR = [[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]];
-function neighbors(x, y){
-  const list = [];
-  for(const [dx,dy] of NBR){
-    const nx = wrap(x+dx, COLS);
-    const ny = wrap(y+dy, ROWS);
-    list.push([nx,ny]);
-  }
-  return list;
-}
+function wrap(x,m){return (x+m)%m;}
+const NBR=[[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]];
+function neighbors(x,y){const lst=[]; for(const[dx,dy]of NBR){lst.push([wrap(x+dx,COLS),wrap(y+dy,ROWS)]);} return lst;}
 
-// Énergie de départ selon type
-function startEnergyFor(type){
-  if(type === T.HERB) return parseInt(document.getElementById('herbStart').value)||8;
-  if(type === T.CARN) return parseInt(document.getElementById('carnStart').value)||10;
+function startEnergy(type){
+  if(type===T.HERB) return parseInt(document.getElementById('herbStart').value)||16;
+  if(type===T.CARN) return parseInt(document.getElementById('carnStart').value)||18;
   return 0;
 }
 
 function step(){
-  const plantSpread = parseFloat(document.getElementById('plantSpread').value);
-  const plantDecay  = parseFloat(document.getElementById('plantDecay').value);
-  const herbEat     = parseInt(document.getElementById('herbEat').value);
-  const herbMoveCost= parseInt(document.getElementById('herbMoveCost').value);
-  const carnEat     = parseInt(document.getElementById('carnEat').value);
-  const carnMoveCost= parseInt(document.getElementById('carnMoveCost').value);
-  const reproEnergy = parseInt(document.getElementById('reproEnergy').value);
-  const maxAge      = parseInt(document.getElementById('maxAge').value);
+  const plantSpread=parseFloat(document.getElementById('plantSpread').value);
+  const plantDecay=parseFloat(document.getElementById('plantDecay').value);
+  const herbEat=parseInt(document.getElementById('herbEat').value);
+  const herbMetab=parseInt(document.getElementById('herbMetab').value);
+  const herbMoveCost=parseInt(document.getElementById('herbMoveCost').value);
+  const carnEat=parseInt(document.getElementById('carnEat').value);
+  const carnMetab=parseInt(document.getElementById('carnMetab').value);
+  const carnMoveCost=parseInt(document.getElementById('carnMoveCost').value);
+  const reproEnergy=parseInt(document.getElementById('reproEnergy').value);
+  const maxAge=parseInt(document.getElementById('maxAge').value);
 
-  const next = make2D(COLS, ROWS, T.EMPTY);
-  const nEnergy = make2D(COLS, ROWS, 0);
-  const nAge = make2D(COLS, ROWS, 0);
+  const next=make2D(COLS,ROWS,T.EMPTY);
+  const nE=make2D(COLS,ROWS,0);
+  const nA=make2D(COLS,ROWS,0);
 
-  // Murs
+  // murs
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++) if(grid[y][x]===T.WALL) next[y][x]=T.WALL;
+
+  // plantes
   for(let y=0;y<ROWS;y++){
     for(let x=0;x<COLS;x++){
-      if(grid[y][x] === T.WALL) next[y][x] = T.WALL;
-    }
-  }
-
-  // Plantes (poussent + flétrissent)
-  for(let y=0;y<ROWS;y++){
-    for(let x=0;x<COLS;x++){
-      if(next[y][x] === T.WALL) continue;
-      const cell = grid[y][x];
-      if(cell === T.PLANT){
-        if(Math.random() < plantDecay){
-          // meurt
-        }else{
-          next[y][x] = T.PLANT;
-        }
-      }else if(cell === T.EMPTY){
-        let hasPlant = false;
-        for(const [nx,ny] of neighbors(x,y)) if(grid[ny][nx] === T.PLANT){ hasPlant = true; break; }
-        if(hasPlant && Math.random() < plantSpread) next[y][x] = T.PLANT;
+      if(next[y][x]===T.WALL) continue;
+      const cell=grid[y][x];
+      if(cell===T.PLANT){
+        if(Math.random()<plantDecay){} else next[y][x]=T.PLANT;
+      }else if(cell===T.EMPTY){
+        let hasPlant=false;
+        for(const[nx,ny] of neighbors(x,y)){ if(grid[ny][nx]===T.PLANT){hasPlant=true;break;} }
+        if(hasPlant && Math.random()<plantSpread) next[y][x]=T.PLANT;
       }
     }
   }
 
-  // Déplacer / Manger : autoriser d'entrer sur la case de la proie (FIX)
-  function tryMoveEntity(x,y,type,moveCost,eatType,eatGain){
-    // cible immédiate
-    let target = null;
-    for(const [nx,ny] of neighbors(x,y)){
-      if(grid[ny][nx] === eatType || next[ny][nx] === eatType){ target = [nx,ny]; break; }
-    }
-    // score “proximité de nourriture”
-    function scoreCell(cx, cy){
-      let s = 0;
-      for(const [dx,dy] of NBR){
-        const ax = wrap(cx+dx, COLS), ay = wrap(cy+dy, ROWS);
-        if(grid[ay][ax] === eatType) s++;
-      }
-      return s;
+  function tryMove(x,y,type,metab,moveCost,eatType,eatGain){
+    // 25% de chance de "se reposer" pour économiser l'énergie si aucune cible proche
+    let restBias = 0.25;
+
+    // cible immédiate (manger)
+    let target=null;
+    for(const[nx,ny] of neighbors(x,y)){
+      if(grid[ny][nx]===eatType || next[ny][nx]===eatType){ target=[nx,ny]; break; }
     }
 
-    let dest = null, ate = false;
-    if(target){ dest = target; ate = true; }
+    // scoring des cases (où il y a plus de proies autour)
+    function scoreCell(cx,cy){
+      let s=0; for(const[dx,dy] of NBR){ const ax=wrap(cx+dx,COLS), ay=wrap(cy+dy,ROWS); if(grid[ay][ax]===eatType) s++; } return s;
+    }
+
+    let dest=null, moved=false;
+    if(target){ dest=target; moved=true; }
     else{
-      const cands = [];
-      for(const [nx,ny] of neighbors(x,y)){
-        if(next[ny][nx] === T.EMPTY && grid[ny][nx] !== T.WALL) cands.push([nx,ny]);
+      const cands=[];
+      for(const[nx,ny] of neighbors(x,y)){
+        if(next[ny][nx]===T.EMPTY && grid[ny][nx]!==T.WALL) cands.push([nx,ny]);
       }
-      if(cands.length){
-        let best = cands[0], bestS = -1;
-        for(const c of cands){ const s = scoreCell(c[0],c[1]); if(s > bestS){ best=c; bestS=s; } }
-        dest = best;
+      if(cands.length && Math.random()>restBias){
+        let best=cands[0], bestS=-1;
+        for(const c of cands){ const s=scoreCell(c[0],c[1]); if(s>bestS){best=c;bestS=s;} }
+        dest=best; moved=true;
+      }else{
+        dest=[x,y]; moved=false; // rester sur place
       }
     }
 
-    let e = (energy[y][x]||startEnergyFor(type)) - moveCost;
-    let a = (age[y][x]||0) + 1;
+    let e=(energy[y][x]||startEnergy(type)) - metab - (moved?moveCost:0);
+    let a=(age[y][x]||0)+1;
 
-    if(dest){
-      const [dx,dy] = dest;
-      const destHasPrey = (grid[dy][dx] === eatType) || (next[dy][dx] === eatType);
-      // autoriser le déplacement même si la case contient la proie
-      if(next[dy][dx] === T.EMPTY || destHasPrey){
-        next[dy][dx] = type;
-        nAge[dy][dx] = a;
-        nEnergy[dy][dx] = e + (destHasPrey ? eatGain : 0);
-      }else{
-        // collision : rester si possible
-        if(next[y][x] === T.EMPTY){
-          next[y][x] = type; nAge[y][x] = a; nEnergy[y][x] = e;
-        }
-      }
+    const dx=dest[0], dy=dest[1];
+    const willEat = (grid[dy][dx]===eatType) || (next[dy][dx]===eatType);
+
+    if(next[dy][dx]===T.EMPTY || willEat){
+      next[dy][dx]=type; nA[dy][dx]=a; nE[dy][dx]=e + (willEat?eatGain:0);
     }else{
-      if(next[y][x] === T.EMPTY){
-        next[y][x] = type; nAge[y][x] = a; nEnergy[y][x] = e;
-      }
+      // collision : rester si possible
+      if(next[y][x]===T.EMPTY){ next[y][x]=type; nA[y][x]=a; nE[y][x]=e; }
     }
   }
 
-  // Herbivores puis carnivores
-  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(grid[y][x]===T.HERB) tryMoveEntity(x,y,T.HERB,herbMoveCost,T.PLANT,herbEat);
-  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(grid[y][x]===T.CARN) tryMoveEntity(x,y,T.CARN,carnMoveCost,T.HERB,carnEat);
+  // ordre : herbivores puis carnivores
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(grid[y][x]===T.HERB) tryMove(x,y,T.HERB,herbMetab,herbMoveCost,T.PLANT,herbEat);
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(grid[y][x]===T.CARN) tryMove(x,y,T.CARN,carnMetab,carnMoveCost,T.HERB,carnEat);
 
-  // Repro / Mort
+  // repro / mort
   for(let y=0;y<ROWS;y++){
     for(let x=0;x<COLS;x++){
-      const t = next[y][x];
+      const t=next[y][x];
       if(t===T.HERB || t===T.CARN){
-        const e = nEnergy[y][x], a = nAge[y][x];
-        if(e <= 0 || a > maxAge){
-          next[y][x] = T.EMPTY; nEnergy[y][x]=0; nAge[y][x]=0;
-        }else if(e >= reproEnergy){
-          const emptyNbr = neighbors(x,y).filter(([nx,ny])=> next[ny][nx]===T.EMPTY);
-          if(emptyNbr.length){
-            const [cx,cy] = emptyNbr[Math.floor(Math.random()*emptyNbr.length)];
-            next[cy][cx] = t;
-            const childE = Math.floor(e/2);
-            nEnergy[cy][cx] = childE; nAge[cy][cx] = 0; nEnergy[y][x] = e - childE;
+        const e=nE[y][x], a=nA[y][x];
+        if(e<=0 || a>maxAge){ next[y][x]=T.EMPTY; nE[y][x]=0; nA[y][x]=0; }
+        else if(e>=reproEnergy){
+          const empties=neighbors(x,y).filter(([nx,ny])=>next[ny][nx]===T.EMPTY);
+          if(empties.length){
+            const [cx,cy]=empties[Math.floor(Math.random()*empties.length)];
+            next[cy][cx]=t; const childE=Math.floor(e/2);
+            nE[cy][cx]=childE; nA[cy][cx]=0; nE[y][x]=e-childE;
           }
         }
       }
     }
   }
 
-  grid = next; energy = nEnergy; age = nAge;
+  grid=next; energy=nE; age=nA; tick++; updateStats();
 }
 
 function draw(){
-  const w=canvas.width, h=canvas.height;
-  const cellW = Math.floor(w/COLS), cellH = Math.floor(h/ROWS);
-  const cw = Math.max(3, cellW), ch = Math.max(3, cellH);
-
+  const w=canvas.width,h=canvas.height;
+  const cellW=Math.floor(w/COLS), cellH=Math.floor(h/ROWS);
+  const cw=Math.max(3,cellW), ch=Math.max(3,cellH);
   const A=getCss('--gridA'), B=getCss('--gridB');
   ctx.fillStyle=B; ctx.fillRect(0,0,w,h);
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){ ctx.fillStyle=((x+y)&1)?A:B; ctx.fillRect(x*cw,y*ch,cw,ch); }
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){ const t=grid[y][x]; if(t!==T.EMPTY){ ctx.fillStyle=colors[t]; ctx.fillRect(x*cw+1,y*ch+1,cw-2,ch-2);} }
+}
 
-  for(let y=0;y<ROWS;y++){
-    for(let x=0;x<COLS;x++){
-      ctx.fillStyle=((x+y)&1)?A:B;
-      ctx.fillRect(x*cw, y*ch, cw, ch);
-    }
+function updateStats(){
+  let p=0,h=0,c=0;
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
+    const t=grid[y][x]; if(t===T.PLANT)p++; else if(t===T.HERB)h++; else if(t===T.CARN)c++;
   }
-  for(let y=0;y<ROWS;y++){
-    for(let x=0;x<COLS;x++){
-      const t=grid[y][x];
-      if(t!==T.EMPTY){ ctx.fillStyle=colors[t]; ctx.fillRect(x*cw+1, y*ch+1, cw-2, ch-2); }
-    }
-  }
+  document.getElementById('pPlants').textContent='🌱 '+p;
+  document.getElementById('pHerb').textContent='🐭 '+h;
+  document.getElementById('pCarn').textContent='🦊 '+c;
+  document.getElementById('pTick').textContent='⏱️ '+tick;
 }
 
 let timer=null; function loop(){ step(); draw(); }
 
-document.getElementById('toggle').addEventListener('click', e=>{
+document.getElementById('toggle').addEventListener('click',e=>{
   if(timer){ clearInterval(timer); timer=null; e.target.textContent='▶︎ Lancer'; }
-  else{ const speed=+document.getElementById('speed').value; timer=setInterval(loop, speed); e.target.textContent='⏸︎ Pause'; }
+  else{ const speed=+document.getElementById('speed').value; timer=setInterval(loop,speed); e.target.textContent='⏸︎ Pause'; }
 });
-document.getElementById('speed').addEventListener('input', e=>{
-  if(timer){ clearInterval(timer); timer=setInterval(loop, +e.target.value); }
+document.getElementById('speed').addEventListener('input',e=>{
+  if(timer){ clearInterval(timer); timer=setInterval(loop,+e.target.value); }
 });
-document.getElementById('step').addEventListener('click', ()=>{ if(!timer) loop(); });
-document.getElementById('reset').addEventListener('click', ()=>{ init(); draw(); });
+document.getElementById('step').addEventListener('click',()=>{ if(!timer) loop(); });
+document.getElementById('reset').addEventListener('click',()=>{ init(); draw(); });
 
-document.getElementById('applySize').addEventListener('click', ()=>{
-  COLS = clamp(+document.getElementById('cols').value, 10, 200);
-  ROWS = clamp(+document.getElementById('rows').value, 10, 200);
+document.getElementById('applySize').addEventListener('click',()=>{
+  COLS=clamp(+document.getElementById('cols').value,10,200);
+  ROWS=clamp(+document.getElementById('rows').value,10,200);
   init(); resizeCanvas(); draw();
 });
-function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
 
-// Seed helpers
-function randomSeed(type, density){
-  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++){
+function randomSeed(type,density){
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
     if(grid[y][x]!==T.EMPTY) continue;
-    if(Math.random() < density){
-      grid[y][x]=type;
-      energy[y][x] = startEnergyFor(type); // énergie de départ (FIX)
-      age[y][x]=0;
-    }
+    if(Math.random()<density){ grid[y][x]=type; energy[y][x]=startEnergy(type); age[y][x]=0; }
   }
-  draw();
+  updateStats(); draw();
 }
-document.getElementById('randomPlants').addEventListener('click', ()=> randomSeed(T.PLANT, 0.10));
-document.getElementById('randomHerb').addEventListener('click', ()=> randomSeed(T.HERB, 0.02));
-document.getElementById('randomCarn').addEventListener('click', ()=> randomSeed(T.CARN, 0.01));
+document.getElementById('randomPlants').addEventListener('click',()=>randomSeed(T.PLANT,0.10));
+document.getElementById('randomHerb').addEventListener('click',()=>randomSeed(T.HERB,0.03));
+document.getElementById('randomCarn').addEventListener('click',()=>randomSeed(T.CARN,0.01));
 
-// Peinture
-const brush = document.getElementById('brush');
-const paintMode = document.getElementById('paintMode');
+// peinture
+const brush=document.getElementById('brush'), paintMode=document.getElementById('paintMode');
 let painting=false, startCell=null;
-
-function canvasToCell(clientX, clientY){
-  const rect=canvas.getBoundingClientRect();
-  const x=Math.floor((clientX-rect.left)/(canvas.width/COLS));
-  const y=Math.floor((clientY-rect.top)/(canvas.height/ROWS));
-  return [clamp(x,0,COLS-1), clamp(y,0,ROWS-1)];
-}
-function setCell(x,y,t){
-  grid[y][x]=t;
-  energy[y][x]=startEnergyFor(t); // énergie de départ quand on peint (FIX)
-  age[y][x]=0;
-}
-function pointer(e){ return (e.touches && e.touches[0]) ? e.touches[0] : e; }
-
-canvas.addEventListener('pointerdown', e=>{
-  painting=true;
-  const p=pointer(e); const [x,y]=canvasToCell(p.clientX, p.clientY);
-  startCell=[x,y];
-  if(paintMode.value==='rect'){ /* attendre up */ }
-  else{ setCell(x,y, +brush.value); draw(); }
+function canvasToCell(cx,cy){ const r=canvas.getBoundingClientRect(); const x=Math.floor((cx-r.left)/(canvas.width/COLS)); const y=Math.floor((cy-r.top)/(canvas.height/ROWS)); return [clamp(x,0,COLS-1),clamp(y,0,ROWS-1)]; }
+function setCell(x,y,t){ grid[y][x]=t; energy[y][x]=startEnergy(t); age[y][x]=0; updateStats(); }
+function pointer(e){ return (e.touches && e.touches[0])? e.touches[0] : e; }
+canvas.addEventListener('pointerdown',e=>{
+  painting=true; const p=pointer(e); const [x,y]=canvasToCell(p.clientX,p.clientY); startCell=[x,y];
+  if(paintMode.value==='rect'){} else{ setCell(x,y,+brush.value); draw(); }
 });
-canvas.addEventListener('pointermove', e=>{
-  if(!painting) return;
-  const p=pointer(e); const [x,y]=canvasToCell(p.clientX, p.clientY);
-  if(paintMode.value==='drag'){ setCell(x,y, +brush.value); draw(); }
+canvas.addEventListener('pointermove',e=>{
+  if(!painting) return; const p=pointer(e); const [x,y]=canvasToCell(p.clientX,p.clientY);
+  if(paintMode.value==='drag'){ setCell(x,y,+brush.value); draw(); }
 });
-canvas.addEventListener('pointerup', e=>{
+canvas.addEventListener('pointerup',e=>{
   if(!painting) return; painting=false;
   if(paintMode.value==='rect' && startCell){
-    const p=pointer(e);
-    const [sx,sy]=startCell, [ex,ey]=canvasToCell(p.clientX, p.clientY);
-    const x0=Math.min(sx,ex), x1=Math.max(sx,ex);
-    const y0=Math.min(sy,ey), y1=Math.max(sy,ey);
-    const t=+brush.value;
-    for(let y=y0;y<=y1;y++) for(let x=x0;x<=x1;x++) setCell(x,y,t);
+    const p=pointer(e); const [sx,sy]=startCell, [ex,ey]=canvasToCell(p.clientX,p.clientY);
+    const x0=Math.min(sx,ex),x1=Math.max(sx,ex),y0=Math.min(sy,ey),y1=Math.max(sy,ey); const t=+brush.value;
+    for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++) setCell(x,y,t);
     draw();
   }
   startCell=null;
 });
-canvas.addEventListener('pointerleave', ()=>{ painting=false; startCell=null; });
+canvas.addEventListener('pointerleave',()=>{painting=false; startCell=null;});
 
-document.getElementById('export').addEventListener('click', ()=>{
-  const state={ COLS, ROWS, grid, energy, age };
-  document.getElementById('io').value = JSON.stringify(state);
+document.getElementById('export').addEventListener('click',()=>{
+  const state={COLS,ROWS,grid,energy,age};
+  document.getElementById('io').value=JSON.stringify(state);
 });
-document.getElementById('import').addEventListener('click', ()=>{
+document.getElementById('import').addEventListener('click',()=>{
   try{
     const s=JSON.parse(document.getElementById('io').value);
     COLS=s.COLS; ROWS=s.ROWS;
-    document.getElementById('cols').value=COLS;
-    document.getElementById('rows').value=ROWS;
-    grid=s.grid; energy=s.energy; age=s.age;
-    resizeCanvas(); draw();
-  }catch(err){ alert('JSON invalide.'); }
+    document.getElementById('cols').value=COLS; document.getElementById('rows').value=ROWS;
+    grid=s.grid; energy=s.energy; age=s.age; resizeCanvas(); updateStats(); draw();
+  }catch{ alert('JSON invalide.'); }
 });
 
 resizeCanvas(); init(); draw();
